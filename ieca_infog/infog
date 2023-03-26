@@ -1,0 +1,200 @@
+#!/bin/bash
+CMD='firefox'
+SEARCHSPLOIT_SCRIPT='/usr/bin/searchsploit'
+
+wordlist="/Wordlists/word_list.txt"
+# Define colors
+lolcat="| lolcat "
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+COLOR3='\033[1m'
+
+function banner {
+
+echo -e "$COLOR3 $RED.__          _____         ________ $WHITE " 
+echo -e "$COLOR3 $RED|__|  ____ _/ ____\____   /  _____/ $WHITE " 
+echo -e "$COLOR3 $RED|  | /    \ |  __\/  _ \ /   \  ___ $WHITE  "
+echo -e "$COLOR3 $RED|  ||   |  \|  | (  <_> )\    \_\  \ $WHITE "
+echo -e "$COLOR3 $RED|__||___|  /|__|  \____/  \______  / $WHITE"
+echo -e "$COLOR3 $RED         \/                      \/ $WHITE"  
+echo -e "$GREEN[${RED}*$GREEN]${WHITE} developed by IECA [INDIAN ERROR CYBER ARMY]"                                  
+echo -e "$GREEN[${RED}*$GREEN]${WHITE} USAGE : information Gethering "
+}
+                                    
+
+# define options 
+NSE="
+1. http-grep				4. dns-brute				
+2. http-enum				5. http-config-backup	
+3. ssh-brute				6. vulscan "	
+				
+	       
+# define options
+opd="
+   {id}      ID of the vulnerability
+   {title}   Title of the vulnerability
+   {matches} Count of matches
+   {product} Matched product string(s)
+   {version} Matched version string(s)
+   {link}    Link to the vulnerability database entry
+   n        Newline
+   t        Tab "
+
+# Function to display the main menu
+function main_menu {
+  clear
+  banner
+  echo ""
+  echo -e "$GREEN[${RED}1$GREEN]${WHITE} Directory Enumeration"
+  echo -e "$GREEN[${RED}2$GREEN]${WHITE} Sub-Domain Enumeration"
+  echo -e "$GREEN[${RED}3$GREEN]${WHITE} NSE 'Nmap Script Engine' "
+  echo -e "$GREEN[${RED}4$GREEN]${WHITE} Find Exploits,Scripts advance option (Search results by google) "
+  echo -e "$GREEN[${RED}5$GREEN]${WHITE} Contact Us"
+  echo -e "$GREEN[${RED}6$GREEN]${WHITE} Quit"
+}
+
+# Function to Directory_enum 
+function Directory_enum {
+clear
+banner
+echo -e "${GREEN}/ _______________________/${WHITE}"
+echo -e "${GREEN}/ Directory Enumeration /${WHITE}"
+echo -e "${GREEN}/ ____________________ /${WHITE}"
+
+echo -e "$GREEN[${RED}*$GREEN]${WHITE} Wordlist Path for Directory Enumeration 'press enter for Skip' "
+read -p "=> " wordlist
+echo -e "$GREEN[${RED}*$GREEN]${WHITE} Enter Your URL  (e.g. http://example.com) "
+read -p "=> " URL
+dirb $URL $wordlist
+  read -p "Press Enter to continue..."
+}
+
+# Function to Sub-Domain Enumeration
+function Sub-Domain {
+clear
+banner
+echo -e "${GREEN}/ _______________________/${WHITE}"
+echo -e "${GREEN}/ SubDomain Enumeration  /${WHITE}"
+echo -e "${GREEN}/ ____________________ /${WHITE}"   
+
+echo -e "$GREEN[${RED}*$GREEN]${WHITE} Sub-Domain Enumeration Using 'amass' Enter Domain : "
+read -p "=> " D
+echo -e "$GREEN[${RED}*$GREEN]${WHITE} Output file name : "
+read -p "=> " O
+amass enum -d $D -o $O
+echo "Output save on this folder : "
+echo "$O"
+  read -p "Press Enter to continue..."
+}
+
+# Function to NSE 'Nmap Script Engine'
+
+function  NSE  {
+clear
+banner
+echo -e "${GREEN}/___________________________/${WHITE}"
+echo -e "${GREEN}/ NSE 'Nmap Script Engine' /${WHITE}"
+echo -e "${GREEN}/_________________________/${WHITE}"
+echo -e "$NSE"
+read -p "=> " n
+echo -e "$GREEN[${RED}*$GREEN]${WHITE} Enter the IP address to scan : ${WHITE}"
+read -p "=> " i
+case $n in
+  1)  
+     read -p "You can also add your arguments 'Enter for skip' : "  AD
+sudo nmap -n -p80 -script http-* $i $AD
+   ;;
+   
+   2)  
+      read -p "You can also add your arguments 'Enter for skip' : "  AD
+sudo nmap -n -p80 -script http-grep $i $AD 
+   ;;
+   3)
+         read -p "You can also add your arguments 'Enter for skip' : "  AD
+sudo nmap -n -p22 -script ssh-brute $i $AD
+   ;;
+   
+   4) 
+      read -p "You can also add your arguments'Enter for skip' : "  AD
+sudo nmap -n -p80 -script dns-brute $i $AD 
+   ;;
+   5)	  
+        read -p "You can also add your arguments'Enter for skip': "  AD
+sudo nmap -n -p80 -script http-config-backup $i $AD
+   ;;
+   6) 
+      echo -e "$opd"
+      read -p "You can also add your arguments 'Enter for skip' : "  AD
+      sleep 2
+      sudo nmap -n -p80 --script=vulscan/vulscan $i $AD
+   ;;
+esac
+read -p "Press Enter to continue..."
+}
+function search {
+	echo -e "$GREEN[${RED}*$GREEN]${WHITE} Type here for search : "
+read -p "=> " VARS
+	echo -e "$GREEN + ----={ SEARCHING: $RED $VARS $WHITE"
+	echo ""
+	echo -e "$GREEN + ----={ NMAP SCRIPTS $CYAN"
+	echo ""
+	ls /usr/share/nmap/scripts | grep $VARS  
+	echo ""
+	echo -e "$GREEN + ----={ METASPLOIT EXPLOITS $CYAN"
+	echo ""
+	cat ~/ieca_infog/msfsearch/metasploit | grep $VARS
+	echo ""
+	echo -e "$GREEN + ----={ EXPLOITDB EXPLOITS $WHITE"
+	echo ""
+	$SEARCHSPLOIT_SCRIPT $VARS
+	echo ""
+	echo https://www.exploit-db.com/search?q=$VARS
+	echo https://exploits.shodan.io/?q=$VARS
+	echo https://vulners.com/search?query=$VARS
+	echo ""
+   read -p "Press Enter to continue..."
+}
+
+# Function to show logged in users
+function ieca  {
+ open s.html
+  read -p "Press Enter to continue..."
+}
+
+# Main program loop
+while true; do
+echo ""
+  main_menu
+  echo ""
+  read -p "==> " choice
+  case $choice in
+    1)
+      Directory_enum 
+      ;;
+    2)
+      Sub-Domain 
+      ;;
+    3)
+       NSE 
+      ;;
+    4)
+      search
+      ;;
+   5)
+     ieca
+      ;;
+    6)
+      echo "Goodbye!"
+      exit 0
+     ;;  
+    *)
+      echo "Invalid choice. Please try again."
+      read -p "Press Enter to continue..."
+      ;;
+  esac
+done
