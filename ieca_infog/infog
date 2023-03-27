@@ -147,7 +147,7 @@ read -p "=> " VARS
 	echo ""
 	echo -e "$GREEN + ----={ METASPLOIT EXPLOITS $CYAN"
 	echo ""
-	cat ~/ieca_infog/msfsearch/metasploit | grep $VARS
+	cat ~infog/ieca_infog/msfsearch/metasploit | grep $VARS
 	echo ""
 	echo -e "$GREEN + ----={ EXPLOITDB EXPLOITS $WHITE"
 	echo ""
